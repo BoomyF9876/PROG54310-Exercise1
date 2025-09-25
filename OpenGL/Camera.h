@@ -18,7 +18,11 @@ public:
 	glm::mat4 GetProjection() { return projection; }
 	glm::mat4 GetView() { return view; }
 
+	void SetProjection(Resolution _res);
+	void LookAt(const glm::vec3& _position, const glm::vec3& _lookAt, const glm::vec3& _up);
+
 private:
+	float fov, near_plane, far_plane;
 	glm::mat4 projection;
 	glm::mat4 view;
 };

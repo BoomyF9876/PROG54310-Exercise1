@@ -8,12 +8,14 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     if (key == GLFW_KEY_V && action == GLFW_PRESS)
     {
         WindowController::GetInstance().ResizeWindow(*gameController->resIt);
+        gameController->camera->SetProjection(*gameController->resIt);
         gameController->MoveResIterator();
         std::cout << "V Pressed!" << std::endl;
     }
     if (key == GLFW_KEY_C && action == GLFW_PRESS)
     {
         gameController->camera = new Camera(*gameController->camIt);
+        gameController->camera->SetProjection(WindowController::GetInstance().GetResolution());
         gameController->MoveCamIterator();
         std::cout << "C Pressed!" << std::endl;
     }
@@ -29,9 +31,9 @@ GameController::GameController()
     resIt = resOptions.begin();
 
     camOptions = {
-        Camera(WindowController::GetInstance().GetResolution(), {200, 200, 2}, {0, 0, 0}, {1, 1, 0}),
-        Camera(WindowController::GetInstance().GetResolution(), {200, 200, 2}, {0, 0, 0}, {0, 1, 1}),
-        Camera(WindowController::GetInstance().GetResolution(), {200, 200, 2}, {0, 0, 0}, {0, 1, 0})
+        Camera({1280, 768}, {100, 100, 2}, {0, 0, 0}, {1, 1, 0}),
+        Camera({1280, 768}, {100, 100, 2}, {0, 0, 0}, {0, 1, 1}),
+        Camera({1280, 768}, {100, 100, 2}, {0, 0, 0}, {0, 1, 0})
     };
     camIt = camOptions.begin();
 }
@@ -87,7 +89,7 @@ void GameController::Initialize()
 
     camera = new Camera(
         WindowController::GetInstance().GetResolution(),
-        { 200, 200, 2 }, { 0, 0, 0 }, { 0, 1, 0 }
+        { 0, 0, 100 }, { 0, 0, 0 }, { 0, 1, 0 }
     );
 }
 
@@ -101,38 +103,31 @@ void GameController::RunGame()
     GLFWwindow* window = WindowController::GetInstance().GetWindow();
     glfwSetWindowUserPointer(window, this);
     glfwSetKeyCallback(window, key_callback);
-    glm::vec3 scale;
     do {
         System::Windows::Forms::Application::DoEvents();
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
-            mesh->RotateWorld(0.05f, {1,0,0});
+            mesh->TranslateWorld({0, 1, 0});
             std::cout << "W Pressed!" << std::endl;
         }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
-            mesh->RotateWorld(-0.05f, { 0,1,0 });
+            mesh->TranslateWorld({ -1, 0, 0 });
             std::cout << "A Pressed!" << std::endl;
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         {
-            mesh->RotateWorld(-0.05f, { 1,0,0 });
+            mesh->TranslateWorld({ 0, -1, 0 });
             std::cout << "S Pressed!" << std::endl;
         }
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
-            mesh->RotateWorld(0.05f, { 0,1,0 });
+            mesh->TranslateWorld({ 1, 0, 0 });
             std::cout << "D Pressed!" << std::endl;
         }
 
-        scale = glm::vec3(sin(glfwGetTime() * 3.1416f / 2 ) * 0.995f + 1.005f);
-
-        if (glfwGetTime() < 3.01) {
-            std::cout << "Scale is " << scale.x << " at " << glfwGetTime() << "s" << std::endl;
-        }
-
         glClear(GL_COLOR_BUFFER_BIT);
-        mesh->Render(glm::scale(camera->GetProjection() * camera->GetView(), scale));
+        mesh->Render(camera->GetProjection() * camera->GetView());
 
         glfwSwapBuffers(window);
         glfwPollEvents();
