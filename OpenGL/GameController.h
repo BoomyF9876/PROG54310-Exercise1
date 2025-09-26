@@ -20,8 +20,11 @@ public:
 	void MoveCamIterator();
 
 	Shader* shader = nullptr;
-	Mesh* mesh = nullptr;
+	Mesh* player = nullptr;
+	Mesh* enemy = nullptr;
 	Camera* camera = nullptr;
+	GLuint vertexBuffer = 0;
+	GLuint indexBuffer = 0;
 
 	std::vector<Resolution> resOptions;
 	std::vector<Resolution>::iterator resIt;

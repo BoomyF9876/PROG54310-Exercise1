@@ -77,3 +77,34 @@ void Shader::LoadShaders(const char* _vertexFilePath, const char* _fragmentFileP
     CreateShaderProgram(_vertexFilePath, _fragmentFilePath);
     LoadAttributes();
 }
+
+void Shader::Draw(const GLfloat* _wvp, size_t size)
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    glUseProgram(programID);
+    glUniformMatrix4fv(attrWVP, 1, FALSE, _wvp);
+
+    glEnableVertexAttribArray(attrVertices);
+    glVertexAttribPointer(
+        attrVertices,
+        3,
+        GL_FLOAT,
+        GL_FALSE,
+        7 * sizeof(float),
+        (void*)0
+    );
+
+    glEnableVertexAttribArray(attrColors);
+    glVertexAttribPointer(
+        attrColors,
+        4,
+        GL_FLOAT,
+        GL_FALSE,
+        7 * sizeof(float),
+        (void*)(3 * sizeof(float))
+    );
+
+    glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_BYTE, (void*)0);
+    glDisableVertexAttribArray(attrVertices);
+    glDisableVertexAttribArray(attrColors);
+}

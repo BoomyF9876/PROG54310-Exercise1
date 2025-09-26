@@ -21,6 +21,7 @@ public:
 	GLuint GetProgramID() { return programID; }
 	GLuint GetAttrVertices() { return attrVertices; }
 
+	void Draw(const GLfloat* _wvp, size_t size);
 	void LoadShaders(const char* _vertexFilePath, const char* _fragmentFilePath);
 	GLuint GetAttrWVP() { return attrWVP; }
 	GLuint GetAttrColors() { return attrColors; }

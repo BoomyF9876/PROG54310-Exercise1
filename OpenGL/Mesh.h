@@ -19,11 +19,10 @@ public:
 
 private:
 	Shader* shader = nullptr;
-	GLuint vertexBuffer = 0;
-	GLuint indexBuffer = 0;
 	std::vector<GLfloat> vertexData;
 	std::vector<GLubyte> indexData;
 	glm::mat4 world = glm::mat4(1);
+	glm::mat4 model;
 };
 
 #endif

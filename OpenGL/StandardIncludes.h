@@ -4,6 +4,7 @@
 #define _STANDARDINCLUDES_H_
 
 #include <vector>
+#include <iostream>
 #include <cassert>
 #include <string>
 #include <fstream>

@@ -40,10 +40,16 @@ GameController::GameController()
 
 GameController::~GameController()
 {
-    if (mesh != nullptr)
+    if (player != nullptr)
     {
-        delete mesh;
-        mesh = nullptr;
+        delete player;
+        player = nullptr;
+    }
+
+    if (enemy != nullptr)
+    {
+        delete enemy;
+        enemy = nullptr;
     }
 
     if (shader != nullptr)
@@ -57,6 +63,9 @@ GameController::~GameController()
         delete camera;
         camera = nullptr;
     }
+
+    glDeleteBuffers(1, &vertexBuffer);
+    glDeleteBuffers(1, &indexBuffer);
 }
 
 void GameController::MoveResIterator()
@@ -91,14 +100,24 @@ void GameController::Initialize()
         WindowController::GetInstance().GetResolution(),
         { 0, 0, 100 }, { 0, 0, 0 }, { 0, 1, 0 }
     );
+
+    glGenBuffers(1, &vertexBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+
+    glGenBuffers(1, &indexBuffer);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
 }
 
 void GameController::RunGame()
 {
     shader = new Shader();
     shader->LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
-    mesh = new Mesh();
-    mesh->Create(shader);
+    
+    player = new Mesh();
+    player->Create(shader);
+
+    enemy = new Mesh();
+    enemy->Create(shader);
 
     GLFWwindow* window = WindowController::GetInstance().GetWindow();
     glfwSetWindowUserPointer(window, this);
@@ -107,27 +126,27 @@ void GameController::RunGame()
         System::Windows::Forms::Application::DoEvents();
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         {
-            mesh->TranslateWorld({0, 1, 0});
+            player->TranslateWorld({0, 1, 0});
             std::cout << "W Pressed!" << std::endl;
         }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         {
-            mesh->TranslateWorld({ -1, 0, 0 });
+            enemy->TranslateWorld({ -1, 0, 0 });
             std::cout << "A Pressed!" << std::endl;
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         {
-            mesh->TranslateWorld({ 0, -1, 0 });
+            player->TranslateWorld({ 0, -1, 0 });
             std::cout << "S Pressed!" << std::endl;
         }
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
-            mesh->TranslateWorld({ 1, 0, 0 });
+            enemy->TranslateWorld({ 1, 0, 0 });
             std::cout << "D Pressed!" << std::endl;
         }
 
-        glClear(GL_COLOR_BUFFER_BIT);
-        mesh->Render(camera->GetProjection() * camera->GetView());
+        player->Render(camera->GetProjection() * camera->GetView());
+        enemy->Render(camera->GetProjection() * camera->GetView());
 
         glfwSwapBuffers(window);
         glfwPollEvents();
