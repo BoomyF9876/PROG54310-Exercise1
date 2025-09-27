@@ -13,16 +13,16 @@ public:
 	~Mesh();
 
 	void Create(Shader* _shader);
-	void Render(glm::mat4 _wvp);
+	void Render(glm::mat4 _wvp, std::string name = "Test");
 	void RotateWorld(float _angle, glm::vec3 axis);
 	void TranslateWorld(glm::vec3 _offset);
 
 private:
 	Shader* shader = nullptr;
 	std::vector<GLfloat> vertexData;
+	std::vector<GLfloat> colorData;
 	std::vector<GLubyte> indexData;
 	glm::mat4 world = glm::mat4(1);
-	glm::mat4 model;
 };
 
 #endif

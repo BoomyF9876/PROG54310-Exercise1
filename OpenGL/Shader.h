@@ -12,6 +12,10 @@ class Shader
 	GLuint attrWVP = 0;
 	GLuint attrColors = 0;
 
+	GLuint vertexBuffer = 0;
+	GLuint indexBuffer = 0;
+	GLuint colorBuffer = 0;
+
 	GLint result = GL_FALSE;
 	int infoLogLength = 0;
 public:
@@ -22,6 +26,7 @@ public:
 	GLuint GetAttrVertices() { return attrVertices; }
 
 	void Draw(const GLfloat* _wvp, size_t size);
+	void LoadDataToBuffer(std::vector<GLfloat> _vertexData, std::vector<GLfloat> _colorData, std::vector<GLubyte> _indexData);
 	void LoadShaders(const char* _vertexFilePath, const char* _fragmentFilePath);
 	GLuint GetAttrWVP() { return attrWVP; }
 	GLuint GetAttrColors() { return attrColors; }

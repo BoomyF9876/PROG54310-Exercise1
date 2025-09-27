@@ -23,8 +23,7 @@ public:
 	Mesh* player = nullptr;
 	Mesh* enemy = nullptr;
 	Camera* camera = nullptr;
-	GLuint vertexBuffer = 0;
-	GLuint indexBuffer = 0;
+	GLFWwindow* window = nullptr;
 
 	std::vector<Resolution> resOptions;
 	std::vector<Resolution>::iterator resIt;
@@ -32,6 +31,8 @@ public:
 	std::vector<Camera> camOptions;
 	std::vector<Camera>::iterator camIt;
 
+private:
+	void Handle_Player_Movement(int input_code, glm::vec3 movement);
 };
 
 #endif
